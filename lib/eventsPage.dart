@@ -57,54 +57,52 @@ class _eventsPageState extends State<eventsPage> {
   }
 
   Future<void> loadImages() async {
-  for (int i = shownImages.length;
-      i < globals.shownEvents.length && i < globals.shownEvents.length + 5;
-      i++) {
-    if (imageIDs.contains(globals.shownEvents[i]["id"])) {
-      shownImages.add(
-        totalImages[imageIDs.indexOf(globals.shownEvents[i]["id"])]
-      );
-      continue;
-    }
-
-    List<Uint8List> newImages = [];
-    var url =
-        Uri.parse('${globals.url}events/${globals.shownEvents[i]["id"]}');
-    var responseEvent = await http.get(url, headers: {
-      "Content-Type": "application/json",
-      "Cookie": globals.token,
-    });
-
-    if (responseEvent.statusCode == 200) {
-      var images = json.decode(responseEvent.body)["event"]["images"];
-      for (var imageUrl in images) {
-        var imageResponse = await http.get(
-          Uri.parse(
-              globals.url + "events" + imageUrl["url"].split("event")[1]),
-          headers: {
-            "Content-Type": "application/json",
-            "Cookie": globals.token,
-          },
-        );
-
-        if (imageResponse.statusCode == 200) {
-          newImages.add(imageResponse.bodyBytes);
-        } else {
-          debugPrint("Failed to load an image for event ${i + 1}");
-        }
+    for (int i = shownImages.length;
+        i < globals.shownEvents.length && i < globals.shownEvents.length + 5;
+        i++) {
+      if (imageIDs.contains(globals.shownEvents[i]["id"])) {
+        shownImages
+            .add(totalImages[imageIDs.indexOf(globals.shownEvents[i]["id"])]);
+        continue;
       }
-    } else {
-      debugPrint("Failed to load event data for event ${i + 1}");
+
+      List<Uint8List> newImages = [];
+      var url =
+          Uri.parse('${globals.url}events/${globals.shownEvents[i]["id"]}');
+      var responseEvent = await http.get(url, headers: {
+        "Content-Type": "application/json",
+        "Cookie": globals.token,
+      });
+
+      if (responseEvent.statusCode == 200) {
+        var images = json.decode(responseEvent.body)["event"]["images"];
+        for (var imageUrl in images) {
+          var imageResponse = await http.get(
+            Uri.parse(
+                globals.url + "events" + imageUrl["url"].split("event")[1]),
+            headers: {
+              "Content-Type": "application/json",
+              "Cookie": globals.token,
+            },
+          );
+
+          if (imageResponse.statusCode == 200) {
+            newImages.add(imageResponse.bodyBytes);
+          } else {
+            // debugPrint("Failed to load an image for event ${i + 1}");
+          }
+        }
+      } else {
+        debugPrint("Failed to load event data for event ${i + 1}");
+      }
+
+      totalImages.add(newImages);
+      imageIDs.add(globals.shownEvents[i]["id"]);
+      shownImages.add(newImages);
     }
 
-    totalImages.add(newImages);
-    imageIDs.add(globals.shownEvents[i]["id"]);
-    shownImages.add(newImages);
+    setState(() {});
   }
-
-  setState(() {});
-}
-
 
   Future<void> loadMoreData(bool refresh) async {
     if (_isLoading || shownImages.length >= globals.shownEvents.length) return;
