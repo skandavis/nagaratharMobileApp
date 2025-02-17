@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:nagarathar/globals.dart' as globals;
+import 'utils.dart' as utils;
 
 class FavoriteIcon extends StatefulWidget {
   int index;
@@ -29,21 +29,9 @@ class _FavoriteIconState extends State<FavoriteIcon> {
           globals.shownEvents[widget.index]["favorite"] = favorite;
         });
         if (favorite) {
-          var url = Uri.parse(
-              globals.url + 'events/' + id.toString() + '/favoritize');
-          debugPrint(globals.token);
-          http.put(url, headers: {
-            "Content-Type": "application/json",
-            "Cookie": globals.token
-          });
+          utils.putRoute('events/$id/favoritize');
         } else {
-          var url = Uri.parse(
-              globals.url + 'events/' + id.toString() + '/unfavoritize');
-          debugPrint(globals.token);
-          http.put(url, headers: {
-            "Content-Type": "application/json",
-            "Cookie": globals.token
-          });
+          utils.putRoute('events/$id/unfavoritize');
         }
       },
       icon: Icon(

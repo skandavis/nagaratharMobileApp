@@ -46,9 +46,13 @@ class _faqQuestionState extends State<faqQuestion> {
           if (widget.isExpanded)
             Container(
               padding: const EdgeInsets.all(10),
-              child: Text(
-                widget.answer,
-                textAlign: TextAlign.justify,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.answer,
+                  ),
+                ],
               ),
             )
         ],

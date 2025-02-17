@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert'; // For JSON encoding
 import 'package:app_set_id/app_set_id.dart';
 import 'package:nagarathar/login.dart';
-import 'package:nagarathar/globals.dart' as globals;
 import 'package:nagarathar/messageReciever.dart';
+import 'utils.dart' as utils;
 
 class registerPage extends StatefulWidget {
   const registerPage({super.key});
@@ -14,15 +12,12 @@ class registerPage extends StatefulWidget {
 }
 
 Future<void> registerUser(String email) async {
-  debugPrint("dkdk");
-  var url = Uri.parse(globals.url + 'register');
-  var response = await http.post(
-    url,
-    headers: {"Content-Type": "application/json"},
-    body: jsonEncode({
+  utils.postRoute(
+    {
       // "email": email,
       "email": "viswanathanmanickam5@gmail.com",
-    }),
+    },
+    "register",
   );
 }
 
@@ -148,7 +143,9 @@ class _registerPageState extends State<registerPage> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        showDialogBox();
+                        await registerUser(email.text).then((onvalue) {
+                          showDialogBox();
+                        });
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nagarathar/accountPage.dart';
 import 'package:nagarathar/introPage.dart';
 import 'package:nagarathar/settingsOption.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,9 +18,19 @@ class _settingsPageState extends State<settingsPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        settingsOption(
-          icon: Icons.person,
-          name: "Account",
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const accountPage(),
+              ),
+            );
+          },
+          child: settingsOption(
+            icon: Icons.person,
+            name: "Account",
+          ),
         ),
         GestureDetector(
           onTap: () async {

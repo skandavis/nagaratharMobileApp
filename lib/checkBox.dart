@@ -4,7 +4,12 @@ class Check extends StatefulWidget {
   bool isChecked = false;
   final String name;
   Function() onChange;
-  Check({super.key, required this.name,required this.onChange});
+  Color color;
+  Check(
+      {super.key,
+      required this.name,
+      required this.onChange,
+      required this.color});
 
   @override
   State<Check> createState() => _CheckState();
@@ -29,6 +34,7 @@ class _CheckState extends State<Check> {
             Text(
               widget.name,
               style: TextStyle(
+                  color: widget.color,
                   decoration: widget.isChecked
                       ? TextDecoration.lineThrough
                       : TextDecoration.none),

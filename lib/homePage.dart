@@ -8,7 +8,8 @@ import 'package:nagarathar/messageReciever.dart';
 import 'package:nagarathar/settingsPage.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  int index;
+  MyHomePage({super.key, required this.index});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -25,9 +26,18 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
   int selectedIndex = 0;
   @override
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      selectedIndex = widget.index;
+    });
+  }
+
   Widget build(BuildContext context) {
     return messageReciever(
       body: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromARGB(255, 5, 3, 30),
         body: pages[selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
@@ -48,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             BottomNavigationBarItem(
-              label: "Announcement",
+              label: "Messages",
               icon: Icon(
                 Icons.question_answer,
               ),

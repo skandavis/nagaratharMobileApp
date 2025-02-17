@@ -21,7 +21,6 @@ class Event extends StatefulWidget {
 class _EventState extends State<Event> {
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -134,12 +133,14 @@ class _EventState extends State<Event> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
+              Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.pin_drop,
                   ),
-                  Text("Someplace,UK My Hotel"),
+                  Text(
+                    event["location"],
+                  ),
                 ],
               ),
               Container(
@@ -160,7 +161,7 @@ class _EventState extends State<Event> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => expandedEventPage(

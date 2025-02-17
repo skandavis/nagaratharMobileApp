@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nagarathar/DropDown.dart';
 import 'package:nagarathar/formInput.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert'; // For JSON encoding
-import 'package:nagarathar/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'utils.dart' as utils;
 
 class contactUsPage extends StatefulWidget {
   const contactUsPage({super.key});
@@ -15,39 +14,24 @@ class contactUsPage extends StatefulWidget {
 String selectedValue = 'Admin';
 TextEditingController nameController = TextEditingController();
 TextEditingController cityController = TextEditingController();
-TextEditingController phoneNumberController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
 TextEditingController subjectController = TextEditingController();
 TextEditingController messageController = TextEditingController();
+final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
 class _contactUsPageState extends State<contactUsPage> {
-  Future<void> sendMessage() async {
-    final url = Uri.parse(
-        '${globals.url}notifications'); // Replace with your Django endpoint URL
-    final response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        "Cookie": globals.token,
+  void sendMessage() async {
+    utils.postRoute(
+      {
+        'name': nameController.text,
+        'city': cityController.text,
+        'phoneNumber': phoneController.text,
+        "department": selectedValue,
+        'subject': subjectController.text,
+        'message': messageController.text,
       },
-      body: jsonEncode(
-        {
-          'name': nameController.text,
-          'city': cityController.text,
-          'phoneNumber': phoneNumberController.text,
-          "department": selectedValue,
-          'subject': subjectController.text,
-          'message': messageController.text,
-        },
-      ),
+      'contact',
     );
-
-    if (response.statusCode == 200) {
-      // Handle success
-      debugPrint('Message sent successfully!');
-    } else {
-      // Handle error
-      debugPrint('Failed to send message. Status code: ${response.statusCode}');
-    }
   }
 
   void onChange(String? value) {
@@ -59,6 +43,17 @@ class _contactUsPageState extends State<contactUsPage> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      prefs.getString("phone").then((value) {
+        phoneController.text = value!;
+      });
+      prefs.getString("name").then((value) {
+        nameController.text = value!;
+      });
+      prefs.getString("city").then((value) {
+        cityController.text = value!;
+      });
+    });
     return Container(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -80,13 +75,22 @@ class _contactUsPageState extends State<contactUsPage> {
             label: "Your Name",
             controller: nameController,
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .025,
+          ),
           formInput(
             label: "City",
             controller: cityController,
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .025,
+          ),
           formInput(
             label: "Your Phone Number",
-            controller: phoneNumberController,
+            controller: phoneController,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .025,
           ),
           formInput(
             label: "Subject",
@@ -125,24 +129,41 @@ class _contactUsPageState extends State<contactUsPage> {
           const SizedBox(
             height: 20,
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * .8,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color.fromARGB(255, 255, 183, 13),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Send Message",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 5, 3, 30),
-                    fontSize: 24,
+          GestureDetector(
+            onTap: () {
+              if (messageController.text.isNotEmpty &&
+                  nameController.text.isNotEmpty &&
+                  cityController.text.isNotEmpty &&
+                  phoneController.text.isNotEmpty &&
+                  subjectController.text.isNotEmpty) {
+                sendMessage();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Not all fields are filled in!'),
                   ),
-                ),
-              ],
+                );
+              }
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * .8,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color.fromARGB(255, 255, 183, 13),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Send Message",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 5, 3, 30),
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

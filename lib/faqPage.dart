@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nagarathar/faqQuestion.dart';
-import 'dart:convert'; // For JSON encoding
-import 'package:nagarathar/globals.dart' as globals;
-import 'package:http/http.dart' as http;
+import 'utils.dart' as utils;
 
 class faqPage extends StatefulWidget {
   const faqPage({super.key});
@@ -12,26 +10,13 @@ class faqPage extends StatefulWidget {
 }
 
 List<dynamic> questions = [];
-Future<List<dynamic>> loadQuestions() async {
-  var url = Uri.parse(globals.url + 'faqs');
-  var response = await http.get(url, headers: {
-    "Content-Type": "application/json",
-    "Cookie": globals.token,
-  });
-  if (response.statusCode == 200) {
-    return json.decode(response.body)["faqs"];
-  } else {
-    debugPrint("Failed to load events");
-    return [];
-  }
-}
 
 class _faqPageState extends State<faqPage> {
   @override
   void initState() {
-    loadQuestions().then((onValue) {
+    utils.getRoute('faqs').then((onValue) {
       setState(() {
-        questions = onValue;
+        questions = onValue["faqs"];
         debugPrint(questions.toString());
       });
     });

@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                widget.showMainPage ? const MyHomePage() : const introPage()),
+                widget.showMainPage ? MyHomePage(index: 0,) : const introPage()),
       );
     });
   }

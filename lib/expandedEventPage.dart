@@ -3,6 +3,7 @@ import 'package:nagarathar/attribute.dart';
 import 'package:nagarathar/categoryLabel.dart';
 import 'package:nagarathar/description.dart';
 import 'package:nagarathar/favorite.dart';
+import 'package:nagarathar/homePage.dart';
 import 'package:nagarathar/imageCarousel.dart';
 import 'package:nagarathar/thumbsUpIcon.dart';
 import 'package:nagarathar/verticalDivider.dart';
@@ -31,7 +32,21 @@ class _expandedEventPageState extends State<expandedEventPage> {
         foregroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [],
+          children: [
+            IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(index: 1,),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+              ),
+            )
+          ],
         ),
       ),
       extendBodyBehindAppBar: true,
@@ -81,11 +96,11 @@ class _expandedEventPageState extends State<expandedEventPage> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     "The Great Norwegian Tour",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
@@ -106,7 +121,7 @@ class _expandedEventPageState extends State<expandedEventPage> {
                 const myVerticaldivider(),
                 attribute(
                   attributeTitle: "Location",
-                  attributeValue: "Someplace,UK My Hotel",
+                  attributeValue: event["location"],
                 ),
                 const myVerticaldivider(),
                 attribute(
@@ -127,6 +142,7 @@ class _expandedEventPageState extends State<expandedEventPage> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Row(
                     children: [
@@ -143,19 +159,6 @@ class _expandedEventPageState extends State<expandedEventPage> {
                     ellipsis: ellipsis,
                     description: event["description"],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        ellipsis = !ellipsis;
-                      });
-                    },
-                    child: Text(
-                      ellipsis ? "Read More" : "Show Less",
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 116, 102, 222),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),

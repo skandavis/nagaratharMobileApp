@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:nagarathar/globals.dart' as globals;
-import 'package:http/http.dart' as http;
-
+import 'utils.dart' as utils;
 class announcment extends StatefulWidget {
   DateTime date = DateTime.now();
   String message;
@@ -21,15 +19,7 @@ class announcment extends StatefulWidget {
 
 class _announcmentState extends State<announcment> {
   void removeNotification() async {
-    final url = Uri.parse(
-        '${globals.url}notifications/${widget.id}'); // Replace with actual URL
-    await http.delete(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        "Cookie": globals.token,
-      },
-    );
+    utils.deleteRoute('notifications/${widget.id}');
   }
 
   Widget build(BuildContext context) {

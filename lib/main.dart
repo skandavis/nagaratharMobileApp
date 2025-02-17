@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nagarathar/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nagarathar/globals.dart' as globals;
-
 bool showMainPage = true;
 
 void main() async {
@@ -37,6 +36,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
       home: SplashScreen(

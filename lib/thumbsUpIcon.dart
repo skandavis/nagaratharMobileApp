@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:nagarathar/globals.dart' as globals;
+import 'utils.dart' as utils;
 
 class thumbsUpIcon extends StatefulWidget {
   int index;
@@ -27,19 +27,9 @@ class _thumbsUpIconState extends State<thumbsUpIcon> {
               count;
         });
         if (liked) {
-          var url = Uri.parse('${globals.url}events/$id/like');
-          debugPrint(globals.token);
-          http.put(url, headers: {
-            "Content-Type": "application/json",
-            "Cookie": globals.token
-          });
+          utils.putRoute('events/$id/like');
         } else {
-          var url = Uri.parse('${globals.url}events/$id/unlike');
-          debugPrint(globals.token);
-          http.put(url, headers: {
-            "Content-Type": "application/json",
-            "Cookie": globals.token
-          });
+          utils.putRoute('events/$id/unlike');
         }
       },
       child: Container(
